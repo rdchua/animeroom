@@ -1,61 +1,89 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, FlatList} from 'react-native';
-import * as kitsu from './Kitsu'
+import {StyleSheet, Dimensions, Text, View, FlatList, ImageBackground, ActivityIndicator, ScrollView, StatusBar} from 'react-native';
+import * as Kitsu from './Kitsu'
+import LinearGradient from 'react-native-linear-gradient';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default class App extends React.Component {
 
     constructor(props){
         super(props)
         this.state = {
-            trendingAnime : []
+            isLoading: true,
+            trendingAnime : [],
+            spotlight: {}
         }
     }
 
     componentDidMount() {
-        fetch(kitsu.trendingAnime)
+        Kitsu.getTrendingAnime()
             .then((response) => response.json())
-            .then((responseJson) => {
-                this.setState({ trendingAnime: responseJson.data })
+            .then((json) => {
+                this.setState({
+                    spotlight: json.data[0],
+                    trendingAnime: json.data,
+                    isLoading: false
+                })
             })
-            .catch((error) => {
-                console.error(error);
-            });
     }
 
     render() {
-        if(this.state.trendingAnime.length == 0) {
-            return null
+        if(this.state.isLoading) {
+            return(
+                <View style={styles.container}>
+                    <ActivityIndicator size="large" color="#ccc" />
+                </View>
+            );
         }
         return (
-            <View style={styles.container}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                scrollEventThrottle={300}
-                keyExtractor={(item, index) => item.id.toString()}
-                data={this.state.trendingAnime}
-                renderItem={({item, separators}) => (
-                    <Text>{item.id}</Text>
+            <ScrollView contentContainerStyle={styles.container}>
+                <StatusBar backgroundColor='transparent' barStyle='light-content' translucent={true}/>
+                <ImageBackground source={{uri: this.state.spotlight.attributes.posterImage.large}} style={styles.spotlight}>
+                    <LinearGradient colors={['transparent', 'rgba(14,14,14,0.65)', 'rgba(14,14,14,0.95)']} style={styles.overlay}>
+                    </LinearGradient>
+                </ImageBackground>
+                <Text style={styles.header}>Trending Anime</Text>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={300}
+                    keyExtractor={(item, index) => item.id.toString()}
+                    data={this.state.trendingAnime}
+                    renderItem={({item, separators}) => (
+                        <Text>{item.id}</Text>
                 )}/>
-            </View>
+            </ScrollView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#141414',
+    },
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+    },
+    spotlight: {
+        width: windowWidth,
+        height: windowHeight - 100,
+    },
+    overlay: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: windowWidth,
+        height: '25%'
+    },
+    header: {
+        color: 'white',
+        fontWeight: '700',
+        fontSize: 14
+    }
 });
