@@ -29,10 +29,9 @@ export default class AnimeCard extends PureComponent {
                             maxStars={1}
                             rating={1}
                             starSize={12}
-                            disabled={false}
+                            disabled={true}
                             fullStar={'heart'}
-                            fullStarColor={'gray'}
-                            selectedStar={(rating) => this.onStarRatingPress(rating)}/>
+                            fullStarColor={'gray'}/>
                         <Text style={styles.likes}>{anime.attributes.popularityRank} in Popularity</Text>
                     </View>
                 </View>

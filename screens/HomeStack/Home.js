@@ -88,7 +88,7 @@ export default class Details extends React.Component {
                         keyExtractor={(item, index) => item.id.toString()}
                         data={this.state.trendingAnime}
                         renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details')}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
                                 <AnimeCard data={item}/>
                             </TouchableOpacity>
                         )}/>
@@ -102,7 +102,7 @@ export default class Details extends React.Component {
                         keyExtractor={(item, index) => item.id.toString()}
                         data={this.state.topAiringAnime}
                         renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details')}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
                                 <AnimeCard data={item}/>
                             </TouchableOpacity>
                         )}/>
@@ -116,7 +116,7 @@ export default class Details extends React.Component {
                         keyExtractor={(item, index) => item.id.toString()}
                         data={this.state.topUpcomingAnime}
                         renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.navigation.navigate('Details')}>
+                            <TouchableOpacity onPress={() => this.navigation.navigate('Details', {anime: item})}>
                                 <AnimeCard data={item}/>
                             </TouchableOpacity>
                         )}/>
