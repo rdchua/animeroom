@@ -3,6 +3,7 @@ import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StarRating from 'react-native-star-rating';
 import * as Kitsu from '../Kitsu';
+import AnimeCard from '../components/AnimeCard';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,21 +27,39 @@ export default class Details extends React.Component {
         super(props)
         this.state = {
             isLoading: true,
-            genres: []
+            genres: [],
+            similarAnime: []
         }
     }
 
     componentDidMount() {
         const { navigation } = this.props;
         const anime = navigation.getParam('anime', {});
-        Alert.alert(anime.id.toString())
         Kitsu.getAnimeGenres(anime.id)
             .then((response) => response.json())
             .then((json) => {
                 this.setState({
                     isLoading: false,
                     genres: json.data
+                }, () => {
+                    Kitsu.getSimilarAnime(this.state.genres)
+                        .then((response) => response.json())
+                        .then((json) => {
+                            this.setState({ similarAnime: json.data })
+                        })
                 })
+            })
+        Kitsu.getCharactersFromAnime(anime.id)
+            .then((response) => response.json())
+            .then((json) => {
+                let characters = []
+                for(let i = 0; i < json.data.length; i++) {
+                    Kitsu.getAnimeCharacter(json.data[i].id)
+                        .then((response) => response.json())
+                        .then((character) => {
+                            characters.push(json.data);
+                        })
+                }
             })
     }
 
@@ -87,7 +106,50 @@ export default class Details extends React.Component {
                         fullStar={'star'}
                         fullStarColor={'#54D2FA'}/>
                 </View>
-                <Text numberOfLines={10} style={styles.synopsis}>{anime.attributes.synopsis}</Text>
+                <View style={[styles.row, styles.inforow]}>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoHeader}>Type</Text>
+                        <Text style={styles.infoSubheader}>{anime.attributes.showType}</Text>
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoHeader}>Status</Text>
+                        <Text style={styles.infoSubheader}>{anime.attributes.status}</Text>
+                    </View>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.infoHeader}>Rating</Text>
+                        <Text style={styles.infoSubheader}>{anime.attributes.averageRating}</Text>
+                    </View>
+                </View>
+                <View style={{paddingLeft: 25, paddingRight: 10}}>
+                    <Text numberOfLines={6} style={styles.synopsis}>{anime.attributes.synopsis}</Text>
+                    <Text style={[styles.header, {marginTop: 15}]}>Trending Anime</Text>
+                    <FlatList
+                        style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={300}
+                        keyExtractor={(item, index) => item.id.toString()}
+                        data={this.state.similarAnime}
+                        renderItem={({item, separators}) => (
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                                <AnimeCard data={item}/>
+                            </TouchableOpacity>)}/>
+                    <Text style={[styles.header, {marginTop: 30}]}>More Information</Text>
+                    <Text style={styles.moreHeader}>Age Rating</Text>
+                    <Text style={styles.moreText}>{anime.attributes.ageRatingGuide ? anime.attributes.ageRatingGuide : 'N/A'}</Text>
+                    <Text style={styles.moreHeader}>Start Date</Text>
+                    <Text style={styles.moreText}>{anime.attributes.startDate ? anime.attributes.startDate : 'N/A'}</Text>
+                    <Text style={styles.moreHeader}>End Date</Text>
+                    <Text style={styles.moreText}>{anime.attributes.endDate ? anime.attributes.endDate : 'N/A'}</Text>
+                    <Text style={styles.moreHeader}>Next Release</Text>
+                    <Text style={styles.moreText}>{anime.attributes.nextRelease ? anime.attributes.nextRelease : 'N/A'}</Text>
+                    <Text style={styles.moreHeader}>Episodes</Text>
+                    <Text style={styles.moreText}>{anime.attributes.episodes ? anime.attributes.episodes : 'N/A'}</Text>
+                    <Text style={styles.moreHeader}>Length per episode</Text>
+                    <Text style={styles.moreText}>{anime.attributes.episodeLength ? anime.attributes.episodeLength : 'N/A'}</Text>
+                    <Text style={styles.moreHeader}>NSFW</Text>
+                    <Text style={styles.moreText}>{anime.attributes.nsfw ? anime.attributes.nsfw : 'N/A'}</Text>
+                </View>
             </ScrollView>
         );
     }
@@ -95,8 +157,11 @@ export default class Details extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        paddingBottom: 25,
         backgroundColor: '#111',
+    },
+    row: {
+        flexDirection: 'row'
     },
     mainContainer: {
         padding: 20,
@@ -180,10 +245,38 @@ const styles = StyleSheet.create({
     synopsis: {
         fontFamily: 'GoogleSans-Regular',
         letterSpacing: 0.5,
-        paddingHorizontal: 25,
         marginTop: 25,
-        color: '#eee',
-        textAlign: 'center',
+        color: 'gray',
         lineHeight: 20
+    },
+    infoHeader: {
+        marginTop: 5,
+        textAlign: 'center',
+        fontFamily: 'GoogleSans-Medium',
+        fontSize: 14,
+        color: 'white'
+    },
+    infoSubheader: {
+        fontFamily: 'GoogleSans-Regular',
+        color: '#888'
+    },
+    infoContainer: {
+        marginRight: 15
+    },
+    inforow: {
+        marginTop: 20,
+        alignSelf: 'center'
+    },
+    moreHeader: {
+        fontSize: 13,
+        fontFamily: 'GoogleSans-Regular',
+        marginTop: 15,
+        color: 'white',
+    },
+    moreText: {
+        fontSize: 12,
+        fontFamily: 'GoogleSans-Regular',
+        color: 'gray',
+        marginTop: 5,
     }
 }); 

@@ -4,9 +4,6 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import * as Kitsu from '../../Kitsu';
 import AnimeCard from '../../components/AnimeCard';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 export default class Details extends React.Component {
 
     static navigationOptions = {
@@ -106,8 +103,7 @@ export default class Details extends React.Component {
                                 <AnimeCard data={item}/>
                             </TouchableOpacity>
                         )}/>
-                    <Text style={[styles.header, {marginTop: 25}]}>Top Upcoming Anime</Text>
-                    <Text style={styles.subheader}>Animes to look out for.</Text>
+                    <Text style={[styles.header, {marginTop: 25}]}>Similar Anime</Text>
                     <FlatList
                         style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
                         horizontal={true}
