@@ -1,11 +1,14 @@
 import buildUrl from 'build-url'
 import {Alert} from 'react-native';
 //? define URL 
-const trendingAnime = 'https://kitsu.io/api/edge/trending/anime'
-const topAiringAnime = 'https://kitsu.io/api/edge/anime?page[limit]=10&filter[status]=current&sort=-averageRating,popularityRank'
-const topUpcomingAnime = 'https://kitsu.io/api/edge/anime?page[limit]=10&filter[status]=upcoming&sort=-averageRating,popularityRank'
-const animeCharacter = 'https://kitsu.io/api/edge/media-characters'
-const anime = 'https://kitsu.io/api/edge/anime'
+const trendingAnime = 'https://kitsu.io/api/edge/trending/anime';
+const mostPopularAnime = 'https://kitsu.io/api/edge/anime?page[limit]=10&filter&sort=popularityRank';
+const topAiringAnime = 'https://kitsu.io/api/edge/anime?page[limit]=10&filter[status]=current&sort=popularityRank';
+const topUpcomingAnime = 'https://kitsu.io/api/edge/anime?page[limit]=10&filter[status]=upcoming&sort=-averageRating,popularityRank';
+const animeCharacter = 'https://kitsu.io/api/edge/media-characters';
+const genres = 'https://kitsu.io/api/edge/genres?page[limit]=20';
+const categories = 'https://kitsu.io/api/edge/categories?sort=-totalMediaCount';
+const anime = 'https://kitsu.io/api/edge/anime';
 
 //? define functions
 export function getTrendingAnime() {
@@ -18,6 +21,10 @@ export function getTopAiringAnime() {
 
 export function getTopUpcomingAnime() {
     return fetch(topUpcomingAnime);
+}
+
+export function getMostPopularAnime() {
+    return fetch(mostPopularAnime);
 }
 
 export function getAnimeGenres(id) {
@@ -33,5 +40,17 @@ export function getCharactersFromAnime(id) {
 }
 
 export function getAnimeCharacter(id){
-    return fetch(`${animeCharacter}/id/character`)
+    return fetch(`${animeCharacter}/${id}/character`)
+}
+
+export function getGenres() {
+    return fetch(genres);
+}
+
+export function getCategories() {
+    return fetch(categories);
+}
+
+export function advancedSearchAnime(url) {
+    return fetch(url);
 }

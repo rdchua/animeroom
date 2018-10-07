@@ -3,6 +3,7 @@ import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StarRating from 'react-native-star-rating';
 import * as Kitsu from '../Kitsu';
+import moment from 'moment'
 import AnimeCard from '../components/AnimeCard';
 
 const windowWidth = Dimensions.get('window').width;
@@ -28,6 +29,7 @@ export default class Details extends React.Component {
         this.state = {
             isLoading: true,
             genres: [],
+            characters: [],
             similarAnime: []
         }
     }
@@ -57,10 +59,14 @@ export default class Details extends React.Component {
                     Kitsu.getAnimeCharacter(json.data[i].id)
                         .then((response) => response.json())
                         .then((character) => {
-                            characters.push(json.data);
+                            this.setState({ characters: [...this.state.characters, character.data] });
                         })
                 }
             })
+    }
+
+    capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     render() {
@@ -84,19 +90,25 @@ export default class Details extends React.Component {
                 <TouchableOpacity style={styles.circleButtonContainer}>
                     <Icon name="play" size={20} color="#fff" style={styles.buttonIcon} />
                 </TouchableOpacity>
+                <View style={[styles.row, {marginTop: -30}]}>
+                    <Icon name="plus" size={20} color="#fff" style={{position: 'absolute', left: 30}} />
+                    <Icon name="share" size={20} color="#fff" style={{position: 'absolute', right: 30}} />
+                </View>
                 <Text style={styles.animeName}>{anime.attributes.canonicalTitle}</Text>
-                <FlatList
-                    style={styles.genreList}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    scrollEventThrottle={300}
-                    keyExtractor={(item, index) => item.id.toString()}
-                    data={this.state.genres}
-                    renderItem={({item, index}) => (
-                        <TouchableOpacity>
-                            <Text style={styles.genre}>{item.attributes.name}</Text>
-                        </TouchableOpacity>
-                    )}/>
+                <View style={{paddingHorizontal: '20%'}}>
+                    <FlatList
+                        style={styles.genreList}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={300}
+                        keyExtractor={(item, index) => item.id.toString()}
+                        data={this.state.genres}
+                        renderItem={({item, index}) => (
+                            <TouchableOpacity>
+                                <Text style={styles.genre}>{item.attributes.name}</Text>
+                            </TouchableOpacity>
+                        )}/>
+                </View>
                 <View style={styles.starContainer}>
                     <StarRating
                         maxStars={5}
@@ -113,16 +125,28 @@ export default class Details extends React.Component {
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Status</Text>
-                        <Text style={styles.infoSubheader}>{anime.attributes.status}</Text>
+                        <Text style={styles.infoSubheader}>{this.capitalize(anime.attributes.status)}</Text>
                     </View>
                     <View style={styles.infoContainer}>
                         <Text style={styles.infoHeader}>Rating</Text>
-                        <Text style={styles.infoSubheader}>{anime.attributes.averageRating}</Text>
-                    </View>
+                        <Text style={[styles.infoSubheader, {color: '#54D2FA'}]}>{anime.attributes.averageRating}%</Text>
+                    </View> 
                 </View>
                 <View style={{paddingLeft: 25, paddingRight: 10}}>
                     <Text numberOfLines={6} style={styles.synopsis}>{anime.attributes.synopsis}</Text>
-                    <Text style={[styles.header, {marginTop: 15}]}>Trending Anime</Text>
+                    <Text style={[styles.header, {marginTop: 20}]}>Characters</Text>
+                    <FlatList
+                        style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={300}
+                        data={this.state.characters}
+                        extraData={this.state.characters}
+                        keyExtractor={(item, index) => item.id}
+                        renderItem={({item, separators}) => (
+                            <Image source={{uri: item.attributes.image ? item.attributes.image.original : null}} style={styles.character}/>    
+                        )}/>
+                    <Text style={[styles.header, {marginTop: 20}]}>Similar Anime</Text>
                     <FlatList
                         style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
                         horizontal={true}
@@ -142,7 +166,7 @@ export default class Details extends React.Component {
                     <Text style={styles.moreHeader}>End Date</Text>
                     <Text style={styles.moreText}>{anime.attributes.endDate ? anime.attributes.endDate : 'N/A'}</Text>
                     <Text style={styles.moreHeader}>Next Release</Text>
-                    <Text style={styles.moreText}>{anime.attributes.nextRelease ? anime.attributes.nextRelease : 'N/A'}</Text>
+                    <Text style={styles.moreText}>{anime.attributes.nextRelease ? moment(anime.attributes.nextRelease).fromNow() : 'N/A'}</Text>
                     <Text style={styles.moreHeader}>Episodes</Text>
                     <Text style={styles.moreText}>{anime.attributes.episodes ? anime.attributes.episodes : 'N/A'}</Text>
                     <Text style={styles.moreHeader}>Length per episode</Text>
@@ -224,6 +248,7 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
         textAlign: 'center',
         color: 'white',
+        marginTop: 50,
         fontSize: 20,
     },
     genreList:{
@@ -257,14 +282,17 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     infoSubheader: {
+        marginTop: 3,
+        fontSize: 15,
         fontFamily: 'GoogleSans-Regular',
+        alignSelf: 'center',
         color: '#888'
     },
     infoContainer: {
         marginRight: 15
     },
     inforow: {
-        marginTop: 20,
+        marginTop: 10,
         alignSelf: 'center'
     },
     moreHeader: {
@@ -278,5 +306,12 @@ const styles = StyleSheet.create({
         fontFamily: 'GoogleSans-Regular',
         color: 'gray',
         marginTop: 5,
+    },
+    character: {
+        width: 50,
+        height: 50,
+        borderRadius: 50,
+        marginRight: 15,
+        backgroundColor: '#303030'
     }
 }); 

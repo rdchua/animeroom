@@ -76,6 +76,9 @@
 		<string>GoogleSans-Medium.ttf</string>
 		<string>GoogleSans-MediumItalic.ttf</string>
 		<string>GoogleSans-Regular.ttf</string>
+		<string>streamers.ttf</string>
+		<string>streamers.woff</string>
+		<string>streamers.woff2</string>
 	</array>
 </dict>
 </plist>

@@ -33,6 +33,7 @@ export default class Details extends React.Component {
             trendingAnime : [],
             topAiringAnime: [],
             topUpcomingAnime: [],
+            mostPopularAnime: [],
         }
     }
 
@@ -59,6 +60,13 @@ export default class Details extends React.Component {
                     topUpcomingAnime: json.data
                 })
             })
+        Kitsu.getMostPopularAnime()
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState({
+                    mostPopularAnime: json.data
+                })
+            })
     }
 
     render() {
@@ -73,49 +81,62 @@ export default class Details extends React.Component {
             <ScrollView contentContainerStyle={styles.container}>
                 <StatusBar backgroundColor='#212121' barStyle='light-content'/>
                 <ScrollView>
-
-                <View style={styles.mainContainer}>
-                    <Text style={styles.header}>Trending Anime</Text>
-                    <Text style={styles.subheader}>Most watched right now.</Text>
-                    <FlatList
-                        style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        scrollEventThrottle={300}
-                        keyExtractor={(item, index) => item.id.toString()}
-                        data={this.state.trendingAnime}
-                        renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
-                                <AnimeCard data={item}/>
-                            </TouchableOpacity>
-                        )}/>
-                    <Text style={[styles.header, {marginTop: 25}]}>Top Airing Anime</Text>
-                    <Text style={styles.subheader}>Hottest on-going shows.</Text>
-                    <FlatList
-                        style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        scrollEventThrottle={300}
-                        keyExtractor={(item, index) => item.id.toString()}
-                        data={this.state.topAiringAnime}
-                        renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
-                                <AnimeCard data={item}/>
-                            </TouchableOpacity>
-                        )}/>
-                    <Text style={[styles.header, {marginTop: 25}]}>Similar Anime</Text>
-                    <FlatList
-                        style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        scrollEventThrottle={300}
-                        keyExtractor={(item, index) => item.id.toString()}
-                        data={this.state.topUpcomingAnime}
-                        renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.navigation.navigate('Details', {anime: item})}>
-                                <AnimeCard data={item}/>
-                            </TouchableOpacity>
-                        )}/>
+                    <View style={styles.mainContainer}>
+                        <Text style={styles.header}>Trending Anime</Text>
+                        <Text style={styles.subheader}>Most watched right now.</Text>
+                        <FlatList
+                            style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            scrollEventThrottle={300}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            data={this.state.trendingAnime}
+                            renderItem={({item, separators}) => (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                                    <AnimeCard data={item}/>
+                                </TouchableOpacity>
+                            )}/>
+                        <Text style={[styles.header, {marginTop: 25}]}>Top Airing Anime</Text>
+                        <Text style={styles.subheader}>Hottest on-going shows.</Text>
+                        <FlatList
+                            style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            scrollEventThrottle={300}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            data={this.state.topAiringAnime}
+                            renderItem={({item, separators}) => (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                                    <AnimeCard data={item}/>
+                                </TouchableOpacity>
+                            )}/>
+                        <Text style={[styles.header, {marginTop: 25}]}>Upcoming Anime</Text>
+                        <Text style={styles.subheader}>Shows to watch out for.</Text>
+                        <FlatList
+                            style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            scrollEventThrottle={300}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            data={this.state.topUpcomingAnime}
+                            renderItem={({item, separators}) => (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                                    <AnimeCard data={item}/>
+                                </TouchableOpacity>
+                            )}/>
+                        <Text style={[styles.header, {marginTop: 25}]}>Most Popular Anime</Text>
+                        <FlatList
+                            style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            scrollEventThrottle={300}
+                            keyExtractor={(item, index) => item.id.toString()}
+                            data={this.state.mostPopularAnime}
+                            renderItem={({item, separators}) => (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                                    <AnimeCard data={item}/>
+                                </TouchableOpacity>
+                            )}/>
                     </View>
                 </ScrollView>
             </ScrollView>

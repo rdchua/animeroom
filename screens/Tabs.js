@@ -8,7 +8,7 @@ import HomeScreen from './HomeStack/Home'
 
 export default class Tabs extends React.Component {
 
-    static navigationOptions = {
+    static navigationOptions = ({ navigation }) => ({
         headerTitle: () => {
             return (
                 <Text style={styles.header} numberOfLines={2}>Aniroom: <Text style={{color: '#fff'}}>Anime and Manga</Text></Text>
@@ -26,18 +26,18 @@ export default class Tabs extends React.Component {
             width: '100%'
         },
         headerRight: (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={20} color="#aaa" style={{paddingRight: 20}} />
             </TouchableOpacity>
         ),
-    }
+    })
 
     render() {
         return (
             <ScrollableTabView 
                 tabBarPosition='bottom'
                 tabBarBackgroundColor='#0a0a0a'
-                tabBarActiveTextColor='#ED3B18'
+                tabBarActiveTextColor='#54D2FA'
                 tabBarInactiveTextColor='gray'
                 tabBarTextStyle={[styles.tabText, {fontWeight: '1000'}]}
                 tabBarUnderlineStyle={styles.tabUnderline}
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
         fontFamily: 'GoogleSans-Medium', 
     },
     tabUnderline: {
-        borderWidth: 0
+        borderWidth: 0,
+        backgroundColor: 'transparent'
     }
 });
