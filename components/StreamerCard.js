@@ -27,10 +27,12 @@ export default class StreamerCard extends PureComponent {
             })
         } else {
             this.props.updateLink('streamers', this.props.iconName, 1);
-            ToastAndroid.showWithGravity(
+            ToastAndroid.showWithGravityAndOffset(
                 this.props.iconName,
                 ToastAndroid.SHORT,
-                ToastAndroid.BOTTOM
+                ToastAndroid.BOTTOM,
+                0,
+                50
               );
             this.setState({ backgroundColor: '#fff', isActive: true })
             switch(streamer){

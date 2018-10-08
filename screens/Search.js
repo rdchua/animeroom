@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, Dimensions, Text, View, Alert, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, TextInput} from 'react-native';
+import { StackActions } from 'react-navigation';
 import GridView from 'react-native-super-grid';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import Icon2 from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import * as Kitsu from '../Kitsu';
 import StarRating from 'react-native-star-rating';
@@ -70,10 +70,8 @@ export default class Search extends React.Component {
     }
 
     searchAnime() {
-        this.setState({ 
-            isSearching: !this.state.isSearching,
-            isLoading: true,
-        });
+        const { navigation } = this.props;
+        this.setState({ isSearching: !this.state.isSearching });
         let searchURL;
         let slider1 = this.state.multiSliderValue[0];
         let slider2 = this.state.multiSliderValue[1];
@@ -82,15 +80,7 @@ export default class Search extends React.Component {
         } else {
             searchURL = `${this.state.url}&filter[text]=${this.state.query}filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20`
         }
-        Kitsu.advancedSearchAnime(searchURL)
-            .then((response) => response.json())
-            .then((json) => {
-                console.log(json.data)
-                this.setState({
-                    isLoading: false, 
-                    searchResults: json.data 
-                })
-            })
+        navigation.navigate('SearchResults', { url: searchURL, query: this.state.query });
     }
 
     componentDidMount() {
@@ -106,7 +96,6 @@ export default class Search extends React.Component {
     render() {
         const { navigation } = this.props;
         var genreList = []
-        var categoryList = []
         if(this.state.genres.length > 0) {
             for(let i = 0; i < this.state.genres.length; i++) {
                 genreList.push(
@@ -130,11 +119,7 @@ export default class Search extends React.Component {
                                 onChangeText={(text) => this.setState({ query: text })}
                             />
                             <TouchableOpacity style={styles.searchButton} onPress={() => this.searchAnime()}>
-                                {
-                                    this.state.isSearching ? 
-                                    <Icon name='check' color='#54D2FA' size={24}/> : null 
-                                }
-                                {/* <Text style={{color: 'white', fontFamily: 'GoogleSans-Bold'}}>Search</Text> */}
+                                <Icon name='check' color='#54D2FA' size={24}/>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -144,7 +129,6 @@ export default class Search extends React.Component {
                             <View style={{height: windowHeight, backgroundColor: '#141414', justifyContent: 'center', alignItems: 'center'}}>
                                 <ActivityIndicator size="large" color="#ccc" />
                             </View> :
-                            this.state.isSearching ? 
                             <View style={styles.advancedSearchContainer}>
                                 <MultiSlider
                                     showValues={true}
@@ -213,16 +197,7 @@ export default class Search extends React.Component {
                                     <RatingsCard filterType='subtype' updateLink={this.updateLink} text='Movie' color='#888'/>
                                     <RatingsCard filterType='subtype' updateLink={this.updateLink} text='Music' color='#888'/>
                                 </View>
-                            </View> : 
-                            <GridView
-                            itemDimension={100}
-                            items={this.state.searchResults}
-                            style={styles.gridView}
-                            renderItem={item => (
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
-                                    <AnimeCard data={item} customStyle={styles.customStyle}/>
-                                </TouchableOpacity>
-                            )}/>
+                            </View>
                         }
                 </ScrollView>
             </View>
