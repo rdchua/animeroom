@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, Alert, WebView} from 'react-native';
+import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, ToastAndroid, WebView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StarRating from 'react-native-star-rating';
+import Storage from 'react-native-simple-store';
 import * as Kitsu from '../Kitsu';
 import moment from 'moment'
 import AnimeCard from '../components/AnimeCard';
@@ -32,6 +33,32 @@ export default class Details extends React.Component {
             characters: [],
             similarAnime: []
         }
+    }
+
+    addToList() {
+        const { navigation } = this.props;
+        const anime = navigation.getParam('anime', {});
+        ToastAndroid.showWithGravityAndOffset(
+            `${anime.attributes.canonicalTitle} has been added to your list.`,
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            0,
+            50
+        );
+        Storage.get('animeList')
+            .then((list) => {
+                if(list.filter(element => element.id == anime.id).length > 0){
+                    ToastAndroid.showWithGravityAndOffset(
+                        `${anime.attributes.canonicalTitle} is already on your list`,
+                        ToastAndroid.LONG,
+                        ToastAndroid.BOTTOM,
+                        0,
+                        50
+                    );
+                } else {
+                    Storage.push('animeList', anime)
+                }
+            })
     }
 
     componentDidMount() {
@@ -91,7 +118,7 @@ export default class Details extends React.Component {
                     <Icon name="play" size={20} color="#fff" style={styles.buttonIcon} />
                 </TouchableOpacity>
                 <View style={[styles.row, {marginTop: -30}]}>
-                    <Icon name="plus" size={20} color="#fff" style={{position: 'absolute', left: 30}} />
+                    <Icon name="plus" onPress={() => this.addToList()} size={20} color="#fff" style={{position: 'absolute', left: 30}} />
                     <Icon name="share" size={20} color="#fff" style={{position: 'absolute', right: 30}} />
                 </View>
                 <Text style={styles.animeName}>{anime.attributes.canonicalTitle}</Text>

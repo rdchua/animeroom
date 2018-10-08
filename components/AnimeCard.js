@@ -19,7 +19,7 @@ export default class AnimeCard extends PureComponent {
         const anime = this.props.data;
         return (
             <View style={[styles.item, this.props.customStyle]}>
-                <Image resizeMode='cover' resizeMethod='resize' borderTopRightRadius={4} borderTopLeftRadius={4} source={{uri: anime.attributes.posterImage.large}} style={styles.image}/>
+                <Image resizeMode='cover' resizeMethod='resize' borderTopRightRadius={4} borderTopLeftRadius={4} source={{uri: anime.attributes.posterImage ? anime.attributes.posterImage.large: 'http://fakeimg.pl/150x170/#212121?font=lobster' }} style={styles.image}/>
                 <View style={styles.infoContainer}>
                     <Text numberOfLines={2} style={styles.title}>{anime.attributes.canonicalTitle}</Text>
                     <Text style={styles.rating}>{anime.attributes.averageRating}%</Text>
