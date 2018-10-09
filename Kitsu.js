@@ -16,6 +16,8 @@ const mostPopularManga = 'https://kitsu.io/api/edge/manga?page[limit]=10&filter&
 const topAiringManga = 'https://kitsu.io/api/edge/manga?page[limit]=10&filter[status]=current&sort=popularityRank';
 const topUpcomingManga = 'https://kitsu.io/api/edge/manga?page[limit]=10&filter[status]=upcoming&sort=-averageRating,popularityRank';
 
+const users = 'https://kitsu.io/api/edge/users?page[limit]=20'
+
 //? define functions
 export function getTrendingAnime() {
     return fetch(trendingAnime);
@@ -75,4 +77,8 @@ export function getTopUpcomingManga() {
 
 export function getMostPopularManga() {
     return fetch(mostPopularManga);
+}
+
+export function getUsers() {
+    return fetch(users);
 }
