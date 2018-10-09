@@ -5,13 +5,15 @@ import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-v
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeScreen from './HomeStack/Home'
+import MangaScreen from './HomeStack/Manga'
+import AnimeListScreen from './AnimeList'
 
 export default class Tabs extends React.Component {
 
     static navigationOptions = ({ navigation }) => ({
         headerTitle: () => {
             return (
-                <Text style={styles.header} numberOfLines={2}>Aniroom: <Text style={{color: '#fff'}}>Anime and Manga</Text></Text>
+                <Text style={styles.header} numberOfLines={2}>Animazing</Text>
             )
           },
         headerStyle: {
@@ -47,8 +49,12 @@ export default class Tabs extends React.Component {
                 <HomeScreen 
                     navigation={this.props.navigation} //! the navigation passed here is from the root stack navigation
                     tabLabel='Anime'/>
-                <HomeScreen tabLabel='Manga'/>
-                <HomeScreen tabLabel='List'/>
+                <MangaScreen
+                    navigation={this.props.navigation} 
+                    tabLabel='Manga'/>
+                <AnimeListScreen
+                    navigation={this.props.navigation} 
+                    tabLabel='List'/>
                 <HomeScreen tabLabel='Settings'/>
             </ScrollableTabView>
         );

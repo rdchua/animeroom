@@ -10,6 +10,12 @@ const genres = 'https://kitsu.io/api/edge/genres?page[limit]=20';
 const categories = 'https://kitsu.io/api/edge/categories?sort=-totalMediaCount';
 const anime = 'https://kitsu.io/api/edge/anime';
 
+
+const trendingManga = 'https://kitsu.io/api/edge/trending/manga';
+const mostPopularManga = 'https://kitsu.io/api/edge/manga?page[limit]=10&filter&sort=popularityRank';
+const topAiringManga = 'https://kitsu.io/api/edge/manga?page[limit]=10&filter[status]=current&sort=popularityRank';
+const topUpcomingManga = 'https://kitsu.io/api/edge/manga?page[limit]=10&filter[status]=upcoming&sort=-averageRating,popularityRank';
+
 //? define functions
 export function getTrendingAnime() {
     return fetch(trendingAnime);
@@ -53,4 +59,20 @@ export function getCategories() {
 
 export function advancedSearchAnime(url) {
     return fetch(url);
+}
+
+export function getTrendingManga() {
+    return fetch(trendingManga);
+}
+
+export function getTopAiringManga() {
+    return fetch(topAiringManga);
+}
+
+export function getTopUpcomingManga() {
+    return fetch(topUpcomingManga);
+}
+
+export function getMostPopularManga() {
+    return fetch(mostPopularManga);
 }
