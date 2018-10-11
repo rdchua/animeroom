@@ -76,9 +76,11 @@ export default class Search extends React.Component {
         let slider1 = this.state.multiSliderValue[0];
         let slider2 = this.state.multiSliderValue[1];
         if(this.state.filterCount == 0) {
-            searchURL = `${this.state.url}filter[text]=${this.state.query}filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20` 
+            searchURL = this.state.query == '' ? this.state.url : `${this.state.url}filter[text]=${this.state.query}`; 
+            searchURL += `filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20` 
         } else {
-            searchURL = `${this.state.url}&filter[text]=${this.state.query}filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20`
+            searchURL = this.state.query == '' ? this.state.url : `${this.state.url}&filter[text]=${this.state.query}`;
+            searchURL += `&filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20`
         }
         navigation.navigate('SearchResults', { url: searchURL, query: this.state.query });
     }

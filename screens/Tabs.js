@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeScreen from './HomeStack/Home'
 import MangaScreen from './HomeStack/Manga'
 import AnimeListScreen from './AnimeList'
+import UsersScreen from './Users'
 
 export default class Tabs extends React.Component {
 
@@ -23,10 +24,12 @@ export default class Tabs extends React.Component {
             fontFamily: 'GoogleSans-Medium',
             color: 'white',
             fontWeight: '1000',
-            alignSelf: 'center',
-            textAlign: 'center',
-            width: '100%'
         },
+        headerLeft: (
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                <Icon name="bars" size={20} color="#aaa" style={{paddingLeft: 20}} />
+            </TouchableOpacity>
+        ),
         headerRight: (
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={20} color="#aaa" style={{paddingRight: 20}} />
@@ -55,7 +58,9 @@ export default class Tabs extends React.Component {
                 <AnimeListScreen
                     navigation={this.props.navigation} 
                     tabLabel='List'/>
-                <HomeScreen tabLabel='Settings'/>
+                <UsersScreen 
+                    navigate={this.props.navigation}
+                    tabLabel='Users'/>
             </ScrollableTabView>
         );
     }
@@ -64,12 +69,8 @@ export default class Tabs extends React.Component {
 const styles = StyleSheet.create({
     header: {
         fontSize: 20,
-        marginLeft: 20,
         fontFamily: 'GoogleSans-Medium',
         color: 'white',
-        width: '100%',
-        textAlign: 'center',
-        alignSelf: 'center'
     },
     tabText: {
         fontSize: 12,

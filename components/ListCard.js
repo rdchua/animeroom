@@ -67,7 +67,7 @@ export default class AnimeCard extends PureComponent {
                             fullStarColor={'#EA9D33'}/>
                         <Text style={styles.likes}>Rank #{anime.attributes.ratingRank} (Highest Rated Anime)</Text>
                     </View>
-                    <Text style={styles.nextEp}>Next episode airs in {anime.attributes.nextRelease ? moment(anime.attributes.nextRelease).fromNow() : '?'}</Text>
+                    <Text style={styles.nextEp}>{anime.attributes.nextRelease ? `Next episode airs ${moment(anime.attributes.nextRelease).fromNow()}` : 'Next episode air date unknown'}</Text>
                     <Text style={styles.totalEps}>Status: {anime.attributes.status ? anime.attributes.status : '?'}</Text>
                 </View>
                 <TouchableOpacity style={styles.deleteIcon} onPress={() => this.deleteFromList()}>

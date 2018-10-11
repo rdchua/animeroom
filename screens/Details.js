@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, ToastAndroid, WebView} from 'react-native';
+import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, ToastAndroid, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StarRating from 'react-native-star-rating';
 import Storage from 'react-native-simple-store';
@@ -71,11 +71,13 @@ export default class Details extends React.Component {
                     isLoading: false,
                     genres: json.data
                 }, () => {
-                    Kitsu.getSimilarAnime(this.state.genres)
+                    if(this.state.genres.length > 0){
+                        Kitsu.getSimilarAnime(this.state.genres)
                         .then((response) => response.json())
                         .then((json) => {
                             this.setState({ similarAnime: json.data })
-                        })
+                        }) 
+                    }
                 })
             })
         Kitsu.getCharactersFromAnime(anime.id)
