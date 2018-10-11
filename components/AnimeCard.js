@@ -22,17 +22,12 @@ export default class AnimeCard extends PureComponent {
                 <Image resizeMode='cover' resizeMethod='resize' borderTopRightRadius={4} borderTopLeftRadius={4} source={{uri: anime.attributes.posterImage ? anime.attributes.posterImage.large: 'http://fakeimg.pl/150x170/#212121?font=lobster' }} style={styles.image}/>
                 <View style={styles.infoContainer}>
                     <Text numberOfLines={2} style={styles.title}>{anime.attributes.canonicalTitle}</Text>
-                    <Text style={styles.rating}>{anime.attributes.averageRating}%</Text>
+                    {
+                        anime.attributes.averageRating ?
+                        <Text style={styles.rating}>{anime.attributes.averageRating}%</Text> : null
+                    }
                     <View style={styles.row}>
-                        <StarRating
-                            starStyle={styles.star}
-                            maxStars={1}
-                            rating={1}
-                            starSize={12}
-                            disabled={true}
-                            fullStar={'heart'}
-                            fullStarColor={'gray'}/>
-                        <Text style={styles.likes}>{anime.attributes.popularityRank} in Popularity</Text>
+                        <Text style={styles.likes}>{anime.attributes.subtype}</Text>
                     </View>
                 </View>
             </View>
@@ -79,8 +74,9 @@ const styles = StyleSheet.create({
         marginTop: 2,
     },
     likes: {
+        marginTop: 2,
+        fontFamily: 'GoogleSans-Medium',
         fontSize: 11, 
         color: '#888',
-        marginLeft: 5
     }
 });

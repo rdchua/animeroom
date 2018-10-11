@@ -14,7 +14,7 @@ export default class Tabs extends React.Component {
     static navigationOptions = ({ navigation }) => ({
         headerTitle: () => {
             return (
-                <Text style={styles.header} numberOfLines={2}>Animazing</Text>
+                <Text style={styles.header} numberOfLines={2}>Okami Anime and Manga</Text>
             )
           },
         headerStyle: {

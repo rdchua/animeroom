@@ -96,7 +96,7 @@ export default class Manga extends React.Component {
                                     <AnimeCard data={item}/>
                                 </TouchableOpacity>
                             )}/>
-                        <Text style={[styles.header, {marginTop: 25}]}>Top Airing Manga</Text>
+                        <Text style={[styles.header, {marginTop: 25}]}>Top Manga</Text>
                         <FlatList
                             style={{marginTop: 10, marginHorizontal: -20, paddingLeft: 20, paddingRight: -20}}
                             horizontal={true}

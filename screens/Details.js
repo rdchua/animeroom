@@ -184,7 +184,7 @@ export default class Details extends React.Component {
                         keyExtractor={(item, index) => item.id.toString()}
                         data={this.state.similarAnime}
                         renderItem={({item, separators}) => (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                            <TouchableOpacity onPress={() => this.props.navigation.push('Details', {anime: item})}>
                                 <AnimeCard data={item}/>
                             </TouchableOpacity>)}/>
                     <Text style={[styles.header, {marginTop: 30}]}>More Information</Text>

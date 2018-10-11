@@ -77,10 +77,10 @@ export default class Search extends React.Component {
         let slider2 = this.state.multiSliderValue[1];
         if(this.state.filterCount == 0) {
             searchURL = this.state.query == '' ? this.state.url : `${this.state.url}filter[text]=${this.state.query}`; 
-            searchURL += `filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20` 
+            searchURL += `filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20&sort=-averageRating,popularityRank` 
         } else {
             searchURL = this.state.query == '' ? this.state.url : `${this.state.url}&filter[text]=${this.state.query}`;
-            searchURL += `&filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20`
+            searchURL += `&filter[year]=${slider1}..${slider2}&filter[averageRating]=${this.state.rating*20}..100&page[limit]=20&sort=-averageRating,popularityRank`
         }
         navigation.navigate('SearchResults', { url: searchURL, query: this.state.query });
     }
@@ -153,6 +153,11 @@ export default class Search extends React.Component {
                                         fullStar={'star'}
                                         fullStarColor={'#54D2FA'} //54D2FA - blue
                                         selectedStar={(rating) => this.setState({ rating: rating })}/>
+                                </View>
+                                <Text style={[styles.header, {marginTop: 20}]}>Type</Text>
+                                <View style={styles.ratingsContainer}>
+                                    <RatingsCard filterType='rating' updateLink={this.updateLink} text='Anime' color='#888'/>
+                                    <RatingsCard filterType='rating' updateLink={this.updateLink} text='Manga' color='#888'/>
                                 </View>
                                 <Text style={[styles.header, {marginTop: 20}]}>Streamers</Text>
                                 <View style={styles.streamersContainer}>
