@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, ToastAndroid, Alert} from 'react-native';
+import {StyleSheet, Dimensions, Text, View, Image, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, ToastAndroid, Alert, Modal, Share, Linking} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StarRating from 'react-native-star-rating';
 import Storage from 'react-native-simple-store';
@@ -12,8 +12,7 @@ const windowHeight = Dimensions.get('window').height;
 
 export default class Details extends React.Component {
 
-    static navigationOptions = ({ navigation }) => ({
-        // title: navigation.state.params.anime.attributes.canonicalTitle,
+    static navigationOptions = {
         headerTransparent: true,
         headerTintColor: '#fff',
         headerStyle: {
@@ -23,42 +22,74 @@ export default class Details extends React.Component {
             fontFamily: 'GoogleSans-Medium',
             fontWeight: '1000',
         },
-    })
+    }
 
     constructor(props){
         super(props)
         this.state = {
             isLoading: true,
+            modalVisible: false,
             genres: [],
             characters: [],
-            similarAnime: []
+            similarAnime: [],
         }
     }
 
     addToList() {
         const { navigation } = this.props;
         const anime = navigation.getParam('anime', {});
-        ToastAndroid.showWithGravityAndOffset(
-            `${anime.attributes.canonicalTitle} has been added to your list.`,
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            0,
-            50
-        );
-        Storage.get('animeList')
+        // TODO: add manga subtype to this array incase API adds more
+        const mangaSubtypes = ['doujin', 'manga', 'manhua', 'manhwa', 'novel', 'oel', 'oneshot'];
+        const store = mangaSubtypes.includes(anime.attributes.subtype) ? 'mangaList' : 'animeList'
+        Storage.get(store)
             .then((list) => {
-                if(list.filter(element => element.id == anime.id).length > 0){
-                    ToastAndroid.showWithGravityAndOffset(
-                        `${anime.attributes.canonicalTitle} is already on your list`,
-                        ToastAndroid.LONG,
-                        ToastAndroid.BOTTOM,
-                        0,
-                        50
-                    );
-                } else {
-                    Storage.push('animeList', anime)
-                }
+                if(list){
+                    if(list.filter(element => element.id == anime.id).length > 0){
+                        ToastAndroid.showWithGravityAndOffset(
+                            `${anime.attributes.canonicalTitle} is already on your ${store} list`,
+                            ToastAndroid.LONG,
+                            ToastAndroid.BOTTOM,
+                            0, 50
+                        );
+                    } else {
+                        ToastAndroid.showWithGravityAndOffset(
+                            `${anime.attributes.canonicalTitle} has been added to your ${store} list.`,
+                                ToastAndroid.LONG,
+                                ToastAndroid.BOTTOM,
+                                0, 50
+                            );
+                            Storage.push(store, anime)
+                    }
+                } 
+            }).catch(error => {
+                Alert.alert(error.toString());
             })
+    }
+
+    openYoutube() {
+        const anime = this.props.navigation.getParam('anime', {});
+        if(anime.attributes.youtubeVideoId){
+            Linking.canOpenURL(`https://www.youtube.com/watch?v=${anime.attributes.youtubeVideoId}`).then(supported => {
+                if (!supported) {
+                    Alert.alert('We found no apps that can open this video')
+                } else {
+                    return Linking.openURL(`https://www.youtube.com/watch?v=${anime.attributes.youtubeVideoId}`);
+                }
+            }).catch(err => console.error('An error occurred', err));
+        } else {
+            Alert.alert('Sorry but there are not any available videos for this anime');
+        }
+    }
+
+    shareEpisode() {
+        const anime = this.props.navigation.getParam('anime', {});
+        Share.share({
+            message: `${anime.attributes.canonicalTitle}\nhttps://kitsu.io/anime/${anime.id}`,
+            url: 'asdfasdfasd',
+            title: 'Wow, did you see that?'
+        }, {
+            dialogTitle: 'share content'
+        })
     }
 
     componentDidMount() {
@@ -116,12 +147,16 @@ export default class Details extends React.Component {
                         <Image source={{uri: anime.attributes.posterImage.original}} style={styles.image}/>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.circleButtonContainer}>
+                <TouchableOpacity style={styles.circleButtonContainer} onPress={() => this.openYoutube()}>
                     <Icon name="play" size={20} color="#fff" style={styles.buttonIcon} />
                 </TouchableOpacity>
                 <View style={[styles.row, {marginTop: -30}]}>
-                    <Icon name="plus" onPress={() => this.addToList()} size={20} color="#fff" style={{position: 'absolute', left: 30}} />
-                    <Icon name="share" size={20} color="#fff" style={{position: 'absolute', right: 30}} />
+                    <TouchableOpacity onPress={() => this.addToList()} style={{position: 'absolute', left: 30}}>
+                        <Icon name="plus" size={20} color="#fff"/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.shareEpisode()} style={{position: 'absolute', right: 30}} >
+                        <Icon name="share" size={20} color="#fff"/>
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.animeName}>{anime.attributes.canonicalTitle}</Text>
                 <View style={{paddingHorizontal: '20%'}}>
@@ -173,7 +208,7 @@ export default class Details extends React.Component {
                         extraData={this.state.characters}
                         keyExtractor={(item, index) => item.id}
                         renderItem={({item, separators}) => (
-                            <Image source={{uri: item.attributes.image ? item.attributes.image.original : null}} style={styles.character}/>    
+                            <Image source={{uri: item.attributes.image ? item.attributes.image.original : null}} borderRadius={50} style={styles.character}/>    
                         )}/>
                     <Text style={[styles.header, {marginTop: 20}]}>Similar Anime</Text>
                     <FlatList
@@ -341,6 +376,6 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 50,
         marginRight: 15,
-        backgroundColor: '#303030'
+        backgroundColor: 'transparent'
     }
 }); 

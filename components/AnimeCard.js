@@ -15,6 +15,10 @@ export default class AnimeCard extends PureComponent {
         }
     }
 
+    Capitalize(str){
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
     render() {
         const anime = this.props.data;
         return (
@@ -27,7 +31,7 @@ export default class AnimeCard extends PureComponent {
                         <Text style={styles.rating}>{anime.attributes.averageRating}%</Text> : null
                     }
                     <View style={styles.row}>
-                        <Text style={styles.likes}>{anime.attributes.subtype}</Text>
+                        <Text style={styles.likes}>{this.Capitalize(anime.attributes.subtype)}</Text>
                     </View>
                 </View>
             </View>
@@ -63,6 +67,7 @@ const styles = StyleSheet.create({
         fontFamily: 'GoogleSans-Medium',
         maxWidth: '85%',
         fontSize: 13,
+        paddingRight: 20,
         color: 'white',
         marginTop: 2
     },

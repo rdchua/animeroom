@@ -53,7 +53,7 @@ export default class Users extends React.Component {
                     keyExtractor={(item, index) => item.id.toString()}
                     data={this.state.users}
                     renderItem={({item, separators}) => (
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', {anime: item})}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Users', {user: item})}>
                             <UserCard data={item}/>
                         </TouchableOpacity>
                     )}/>

@@ -20,7 +20,7 @@ export default class AnimeCard extends PureComponent {
             <View style={styles.item}>
                 <Image resizeMode='cover' resizeMethod='resize' source={{uri: user.attributes.avatar ? user.attributes.avatar.medium : 'https://dummyimage.com/50x50/414141.jpg?text=-'}} style={styles.image}/>
                 <View style={styles.rightContainer}>
-                    <Text style={styles.name}>{user.attributes.name}</Text>
+                    <Text style={styles.name}>{user.attributes.name ? user.attributes.name : 'NA'}</Text>
                     <Text style={styles.location}>{moment(user.attributes.createdAt).fromNow()}</Text>
                 </View>
             </View>
@@ -30,6 +30,7 @@ export default class AnimeCard extends PureComponent {
 
 const styles = StyleSheet.create({
     item: {
+        borderRadius: 50,
         marginTop: 15,
         flexDirection: 'row'
     },

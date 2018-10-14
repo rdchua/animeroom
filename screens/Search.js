@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions, Text, View, Alert, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, FlatList, TextInput} from 'react-native';
+import {StyleSheet, Dimensions, Text, View, Alert, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity, Switch, TextInput} from 'react-native';
 import { StackActions } from 'react-navigation';
 import GridView from 'react-native-super-grid';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import * as Kitsu from '../Kitsu';
 import StarRating from 'react-native-star-rating';
@@ -115,11 +116,15 @@ export default class Search extends React.Component {
                             </TouchableOpacity>
                             <TextInput
                                 style={styles.headerTitle}
-                                placeholder="Search Anime/Manga.."
+                                placeholder="Search Anime.."
                                 placeholderTextColor="#888"
                                 editable={true}
+                                underlineColorAndroid='transparent'
                                 onChangeText={(text) => this.setState({ query: text })}
                             />
+                            <TouchableOpacity style={styles.searchButton} onPress={() => navigation.navigate('MangaSearch')}>
+                                <Icon2 name='book-open' color='#fff' size={18}/>
+                            </TouchableOpacity>
                             <TouchableOpacity style={styles.searchButton} onPress={() => this.searchAnime()}>
                                 <Icon name='check' color='#54D2FA' size={24}/>
                             </TouchableOpacity>
@@ -153,11 +158,6 @@ export default class Search extends React.Component {
                                         fullStar={'star'}
                                         fullStarColor={'#54D2FA'} //54D2FA - blue
                                         selectedStar={(rating) => this.setState({ rating: rating })}/>
-                                </View>
-                                <Text style={[styles.header, {marginTop: 20}]}>Type</Text>
-                                <View style={styles.ratingsContainer}>
-                                    <RatingsCard filterType='rating' updateLink={this.updateLink} text='Anime' color='#888'/>
-                                    <RatingsCard filterType='rating' updateLink={this.updateLink} text='Manga' color='#888'/>
                                 </View>
                                 <Text style={[styles.header, {marginTop: 20}]}>Streamers</Text>
                                 <View style={styles.streamersContainer}>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         paddingLeft: 24,
-        width: '75%',
+        width: '65%',
         fontFamily: 'GoogleSans-Medium',
         fontSize: 18,
         color: 'white'

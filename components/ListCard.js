@@ -20,12 +20,14 @@ export default class AnimeCard extends PureComponent {
 
     deleteFromList() {
         const anime = this.props.data;
-        Storage.get('animeList')
+        const mangaSubtypes = ['doujin', 'manga', 'manhua', 'manhwa', 'novel', 'oel', 'oneshot'];
+        const store = mangaSubtypes.includes(anime.attributes.subtype) ? 'mangaList' : 'animeList'
+        Storage.get(store)
             .then((list) => {
                 let index = list.findIndex(element => element.id == anime.id);
                 list.splice(index, 1);
                 this.props.updateList(list)
-                Storage.save('animeList', list);
+                Storage.save(store, list);
                 ToastAndroid.showWithGravityAndOffset(
                     `${anime.attributes.canonicalTitle} deleted from list`,
                     ToastAndroid.LONG,

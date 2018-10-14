@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
+ * @providesModule JSTimers
  * @format
  * @flow
  */
@@ -14,7 +15,6 @@ const Systrace = require('Systrace');
 
 const invariant = require('fbjs/lib/invariant');
 const {Timing} = require('NativeModules');
-const BatchedBridge = require('BatchedBridge');
 
 import type {ExtendedError} from 'parseErrorStack';
 
@@ -483,20 +483,13 @@ const JSTimers = {
   },
 };
 
-let ExportedJSTimers;
 if (!Timing) {
   console.warn("Timing native module is not available, can't set timers.");
   // $FlowFixMe: we can assume timers are generally available
-  ExportedJSTimers = ({
+  module.exports = ({
     callImmediates: JSTimers.callImmediates,
     setImmediate: JSTimers.setImmediate,
   }: typeof JSTimers);
 } else {
-  ExportedJSTimers = JSTimers;
+  module.exports = JSTimers;
 }
-
-BatchedBridge.setImmediatesCallback(
-  ExportedJSTimers.callImmediates.bind(ExportedJSTimers),
-);
-
-module.exports = ExportedJSTimers;

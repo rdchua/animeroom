@@ -3,11 +3,9 @@ import {StyleSheet, Dimensions, Text, View, FlatList, ActivityIndicator, ScrollV
 import Icon from 'react-native-vector-icons/FontAwesome'
 import * as Kitsu from '../../Kitsu';
 import AnimeCard from '../../components/AnimeCard';
-
 export default class Home extends React.Component {
 
     static navigationOptions = {
-        title: (<Text>AniRoom</Text>),
         headerStyle: {
             backgroundColor: '#212121'
         },
@@ -19,11 +17,6 @@ export default class Home extends React.Component {
             paddingLeft: 20,
             width: '100%'
         },
-        headerRight: (
-            <TouchableOpacity>
-                <Icon name="search" size={20} color="#aaa" style={{paddingRight: 20}} />
-            </TouchableOpacity>
-        ),
     }
 
     constructor(props){
@@ -163,5 +156,13 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
         color: '#bbb',
         fontSize: 14
-    }
+    },
+    adView: {
+        height: 50,
+        width: '100%', // get screen width by dimension
+        backgroundColor: 'white',
+        margin:20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });

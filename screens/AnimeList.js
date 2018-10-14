@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions, Text, View, FlatList, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity} from 'react-native';
+import {StyleSheet, Dimensions, Alert, View, FlatList, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Storage from 'react-native-simple-store';
 import ListCard from '../components/ListCard';
@@ -19,13 +19,23 @@ export default class AnimeList extends React.Component {
     }
 
     componentDidMount() {
-        Storage.get('animeList')
-            .then((list) => {
-                this.setState({ 
-                    animeList: list,
-                    isLoading: false,
+        if(this.props.tabLabel == 'Anime') {
+            Storage.get('animeList')
+                .then((list) => {
+                    this.setState({ 
+                        animeList: list,
+                        isLoading: false,
+                    })
                 })
-            })
+        } else {
+            Storage.get('mangaList')
+                .then((list) => {
+                    this.setState({ 
+                        animeList: list,
+                        isLoading: false,
+                    })
+                })
+        }
     }
 
     updateList = (newList) => {

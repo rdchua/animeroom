@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
-import {StyleSheet, Dimensions, Text, View, FlatList, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity} from 'react-native';
+import {StyleSheet, Dimensions, Text, Alert, FlatList, ActivityIndicator, ScrollView, StatusBar, TouchableOpacity} from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -8,33 +8,38 @@ import HomeScreen from './HomeStack/Home'
 import MangaScreen from './HomeStack/Manga'
 import AnimeListScreen from './AnimeList'
 import UsersScreen from './Users'
+import ListTabsScreen from './ListTabs'
+import SettingsScreen from './Settings'
 
 export default class Tabs extends React.Component {
 
-    static navigationOptions = ({ navigation }) => ({
-        headerTitle: () => {
-            return (
-                <Text style={styles.header} numberOfLines={2}>Okami Anime and Manga</Text>
-            )
-          },
-        headerStyle: {
-            backgroundColor: '#212121'
-        },
-        headerTitleStyle: {
-            fontFamily: 'GoogleSans-Medium',
-            color: 'white',
-            fontWeight: '1000',
-        },
-        headerLeft: (
-            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-                <Icon name="bars" size={20} color="#aaa" style={{paddingLeft: 20}} />
-            </TouchableOpacity>
-        ),
-        headerRight: (
-            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-                <Icon name="search" size={20} color="#aaa" style={{paddingRight: 20}} />
-            </TouchableOpacity>
-        ),
+    constructor(props){
+        super(props)
+        this.state = {
+            elevation: 6
+        }
+    }
+
+    static navigationOptions = ({ navigation, navigationOptions }) => ({
+            headerTitle: () => {
+                return (
+                    <Text style={styles.header} numberOfLines={2}>Okami Anime and Manga</Text>
+                )
+            },
+            headerStyle: {
+                elevation: 0,
+                backgroundColor: '#212121'
+            },
+            headerTitleStyle: {
+                fontFamily: 'GoogleSans-Medium',
+                color: 'white',
+                fontWeight: '1000',
+            },
+            headerLeft: (
+                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                    <Icon name="search" size={20} color="#aaa" style={{ paddingLeft: 20 }} />
+                </TouchableOpacity>
+            ),
     })
 
     render() {
@@ -55,12 +60,12 @@ export default class Tabs extends React.Component {
                 <MangaScreen
                     navigation={this.props.navigation} 
                     tabLabel='Manga'/>
-                <AnimeListScreen
+                <ListTabsScreen
                     navigation={this.props.navigation} 
                     tabLabel='List'/>
-                <UsersScreen 
-                    navigate={this.props.navigation}
-                    tabLabel='Users'/>
+                <SettingsScreen 
+                    navigation={this.props.navigation}
+                    tabLabel='Settings'/>
             </ScrollableTabView>
         );
     }
